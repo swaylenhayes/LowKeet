@@ -294,8 +294,6 @@ class WhisperState: NSObject, ObservableObject {
                 transcriptionService = localTranscriptionService
             case .parakeet:
                 transcriptionService = parakeetTranscriptionService
-            default:
-                throw WhisperStateError.transcriptionFailed
             }
 
             let transcriptionStart = Date()

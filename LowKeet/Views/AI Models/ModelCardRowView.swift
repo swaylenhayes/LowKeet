@@ -47,9 +47,6 @@ struct ModelCardRowView: View {
                         whisperState: whisperState
                     )
                 }
-            default:
-                // OFFLINE MODE: Cloud and custom models not supported
-                EmptyView()
             }
         }
     }

@@ -187,10 +187,9 @@ class AudioCleanupManager {
     /// Run cleanup on the specified transcriptions
     func runCleanupForTranscriptions(modelContext: ModelContext, transcriptions: [Transcription]) async -> (deletedCount: Int, errorCount: Int) {
         logger.info("Running cleanup for \(transcriptions.count) specific transcriptions")
-        
-        do {
-            // Execute SwiftData operations on the main thread
-            return try await MainActor.run {
+
+        // Execute SwiftData operations on the main thread
+        return await MainActor.run {
                 var deletedCount = 0
                 var errorCount = 0
                 
@@ -222,13 +221,9 @@ class AudioCleanupManager {
                         self.logger.error("Error saving model context after cleanup: \(error.localizedDescription)")
                     }
                 }
-                
+
                 return (deletedCount, errorCount)
             }
-        } catch {
-            logger.error("Error during targeted cleanup: \(error.localizedDescription)")
-            return (0, 0)
-        }
     }
     
     /// Format file size in human-readable form

@@ -95,11 +95,7 @@ class AudioProcessor {
                     }
                 )
                 
-                if let error = error {
-                    throw AudioProcessingError.conversionFailed
-                }
-                
-                if status == .error {
+                if error != nil || status == .error {
                     throw AudioProcessingError.conversionFailed
                 }
                 

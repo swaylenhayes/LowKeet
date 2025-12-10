@@ -50,8 +50,6 @@ class AudioTranscriptionService: ObservableObject {
                 text = try await localTranscriptionService.transcribe(audioURL: url, model: model)
             case .parakeet:
                 text = try await parakeetTranscriptionService.transcribe(audioURL: url, model: model)
-            default:
-                throw TranscriptionError.transcriptionFailed
             }
             
             let transcriptionDuration = Date().timeIntervalSince(transcriptionStart)

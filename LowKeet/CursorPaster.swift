@@ -22,7 +22,7 @@ class CursorPaster {
             }
         }
 
-        ClipboardManager.setClipboard(text, transient: !preserveTranscript)
+        _ = ClipboardManager.setClipboard(text, transient: !preserveTranscript)
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
             if UserDefaults.standard.bool(forKey: "UseAppleScriptPaste") {

@@ -15,7 +15,7 @@ class ParakeetTranscriptionService: TranscriptionService {
     }
 
     private func ensureModelsLoaded(for version: AsrModelVersion) async throws {
-        if let manager = asrManager, activeVersion == version {
+        if asrManager != nil, activeVersion == version {
             return
         }
 

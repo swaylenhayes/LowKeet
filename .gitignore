@@ -87,5 +87,14 @@ _dev_test_files/
 _archive/
 supportfiles/
 executions.json
-scripts/
 *.md.bak
+
+## Large binaries - download separately via install-dependencies.sh
+# AI Models (~1.6 GB) - See release: models-v1.0
+BundledModels/
+
+# Whisper Framework (~161 MB) - See release: whisper-framework-v1.0
+whisper.xcframework/
+
+# Release packages - managed separately
+_releases/

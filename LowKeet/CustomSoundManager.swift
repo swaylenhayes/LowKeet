@@ -155,7 +155,12 @@ class CustomSoundManager: ObservableObject {
         }
 
         let asset = AVAsset(url: url)
+        #if compiler(>=6.0)
+        // TODO: Migrate to async/await in Swift 6
         let duration = asset.duration.seconds
+        #else
+        let duration = asset.duration.seconds
+        #endif
 
         guard duration.isFinite && duration > 0 else {
             return .failure(.invalidAudioFile)
