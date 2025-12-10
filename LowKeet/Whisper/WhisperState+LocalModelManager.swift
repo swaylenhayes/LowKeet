@@ -196,15 +196,15 @@ extension WhisperState {
             }
 
             Task {
-                await withTaskCancellationHandler {
+                await withTaskCancellationHandler(operation: {
+                    await withCheckedContinuation { (_: CheckedContinuation<Void, Never>) in }
+                }, onCancel: {
                     observation.invalidate()
                     // Also ensure continuation is resumed with cancellation if task is cancelled
                     if finished.exchange(true, ordering: .acquiring) == false {
                         continuation.resume(throwing: CancellationError())
                     }
-                } operation: {
-                    await withCheckedContinuation { (_: CheckedContinuation<Void, Never>) in }
-                }
+                })
             }
         }
     }
@@ -402,11 +402,11 @@ extension WhisperState {
 
         // Build a destination URL inside the app-managed models directory
         let baseName = sourceURL.deletingPathExtension().lastPathComponent
-        var destinationURL = modelsDirectory.appendingPathComponent("\(baseName).bin")
+        let destinationURL = modelsDirectory.appendingPathComponent("\(baseName).bin")
 
         // Do not rename on collision; simply notify the user and abort
         if FileManager.default.fileExists(atPath: destinationURL.path) {
-            await NotificationManager.shared.showNotification(
+            NotificationManager.shared.showNotification(
                 title: "A model named \(baseName).bin already exists",
                 type: .warning,
                 duration: 4.0
@@ -427,14 +427,14 @@ extension WhisperState {
                 allAvailableModels.append(imported)
             }
 
-            await NotificationManager.shared.showNotification(
+            NotificationManager.shared.showNotification(
                 title: "Imported \(destinationURL.lastPathComponent)",
                 type: .success,
                 duration: 3.0
             )
         } catch {
             logError("Failed to import local model", error)
-            await NotificationManager.shared.showNotification(
+            NotificationManager.shared.showNotification(
                 title: "Failed to import model: \(error.localizedDescription)",
                 type: .error,
                 duration: 5.0

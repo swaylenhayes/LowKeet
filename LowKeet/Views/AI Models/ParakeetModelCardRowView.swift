@@ -39,13 +39,6 @@ struct ParakeetModelCardRowView: View {
             Text(model.displayName)
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundColor(Color(.labelColor))
-            
-            Text("Experimental")
-                .font(.system(size: 11, weight: .medium))
-                .padding(.horizontal, 6)
-                .padding(.vertical, 2)
-                .background(Capsule().fill(Color.orange.opacity(0.8)))
-                .foregroundColor(.white)
 
             statusBadge
             Spacer()
@@ -122,7 +115,7 @@ struct ParakeetModelCardRowView: View {
             } else if isDownloaded {
                 Button(action: {
                     Task {
-                        await whisperState.setDefaultTranscriptionModel(model)
+                        whisperState.setDefaultTranscriptionModel(model)
                     }
                 }) {
                     Text("Set as Default")

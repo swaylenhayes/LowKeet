@@ -1,7 +1,10 @@
 import SwiftUI
 
-extension String: Identifiable {
-    public var id: String { self }
+struct EditingItem: Identifiable {
+    let id: String
+    init(_ value: String) {
+        self.id = value
+    }
 }
 
 enum SortMode: String {
@@ -51,7 +54,7 @@ struct WordReplacementView: View {
     @StateObject private var manager = WordReplacementManager()
     @State private var showAddReplacementModal = false
     @State private var showAlert = false
-    @State private var editingOriginal: String? = nil
+    @State private var editingOriginal: EditingItem? = nil
     
     @State private var alertMessage = ""
     @State private var sortMode: SortMode = .originalAsc
@@ -166,7 +169,7 @@ struct WordReplacementView: View {
                                     original: pair.key,
                                     replacement: pair.value,
                                     onDelete: { manager.removeReplacement(original: pair.key) },
-                                    onEdit: { editingOriginal = pair.key }
+                                    onEdit: { editingOriginal = EditingItem(pair.key) }
                                 )
                                 
                                 if index != sortedReplacements.count - 1 {
@@ -186,7 +189,7 @@ struct WordReplacementView: View {
         }
         // Edit existing replacement
         .sheet(item: $editingOriginal) { original in
-            EditReplacementSheet(manager: manager, originalKey: original)
+            EditReplacementSheet(manager: manager, originalKey: original.id)
         }
         
     }

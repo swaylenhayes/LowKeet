@@ -200,29 +200,11 @@ struct PermissionsView: View {
     
     var body: some View {
         ScrollView {
-            VStack(spacing: 32) {
-                // Header
-                VStack(spacing: 24) {
-                    Image(systemName: "shield.lefthalf.filled")
-                        .font(.system(size: 40))
-                        .foregroundStyle(.blue)
-                        .padding(20)
-                        .background(Circle()
-                            .fill(Color(.windowBackgroundColor).opacity(0.9))
-                            .shadow(color: .black.opacity(0.1), radius: 10, y: 5))
-                    
-                    VStack(spacing: 8) {
-                        Text("App Permissions")
-                            .font(.system(size: 28, weight: .bold))
-                        Text("LowKeet requires the following permissions to function properly")
-                            .font(.system(size: 15))
-                            .foregroundStyle(.secondary)
-                    }
-                }
-                .padding(.vertical, 40)
-                .frame(maxWidth: .infinity)
-                
-                // Permission Cards
+            VStack(alignment: .leading, spacing: 20) {
+                Text("Permissions")
+                    .font(.title2)
+                    .fontWeight(.semibold)
+
                 VStack(spacing: 16) {
                     // Keyboard Shortcut Permission
                     PermissionCard(
@@ -298,7 +280,8 @@ struct PermissionsView: View {
                     )
                 }
             }
-            .padding(24)
+            .padding(.horizontal, 32)
+            .padding(.vertical, 40)
         }
         .background(Color(NSColor.controlBackgroundColor))
         .onAppear {

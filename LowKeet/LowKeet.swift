@@ -1,6 +1,5 @@
 import SwiftUI
 import SwiftData
-import Sparkle
 import AppKit
 import OSLog
 import AppIntents
@@ -14,9 +13,8 @@ struct LowKeetApp: App {
     
     @StateObject private var whisperState: WhisperState
     @StateObject private var hotkeyManager: HotkeyManager
-    @StateObject private var updaterViewModel: UpdaterViewModel
     @StateObject private var menuBarManager: MenuBarManager
-    // OFFLINE MODE: Removed aiService, enhancementService, activeWindowService, onboarding, announcements
+    // OFFLINE MODE: Removed aiService, enhancementService, activeWindowService, onboarding, announcements, updater
     @State private var showMenuBarIcon = true
     
     // Audio cleanup manager for automatic deletion of old audio files
@@ -79,10 +77,7 @@ struct LowKeetApp: App {
         
         containerInitializationFailed = initializationFailed
 
-        // OFFLINE MODE: Initialize only core services (no AI enhancement)
-        let updaterViewModel = UpdaterViewModel()
-        _updaterViewModel = StateObject(wrappedValue: updaterViewModel)
-
+        // OFFLINE MODE: Initialize only core services (no AI enhancement, no updater)
         let whisperState = WhisperState(modelContext: container.mainContext)
         _whisperState = StateObject(wrappedValue: whisperState)
 
@@ -170,7 +165,6 @@ struct LowKeetApp: App {
             ContentView()
                 .environmentObject(whisperState)
                 .environmentObject(hotkeyManager)
-                .environmentObject(updaterViewModel)
                 .environmentObject(menuBarManager)
                 .modelContainer(container)
                     .onAppear {
@@ -187,8 +181,7 @@ struct LowKeetApp: App {
                             return
                         }
                         
-                        updaterViewModel.silentlyCheckForUpdates()
-                        // OFFLINE MODE: Removed announcements service
+                        // OFFLINE MODE: Removed announcements service and updater
 
                         // Start the transcription auto-cleanup service (handles immediate and scheduled transcript deletion)
                         transcriptionAutoCleanupService.startMonitoring(modelContext: container.mainContext)
@@ -225,10 +218,6 @@ struct LowKeetApp: App {
         .windowStyle(.hiddenTitleBar)
         .commands {
             CommandGroup(replacing: .newItem) { }
-            
-            CommandGroup(after: .appInfo) {
-                CheckForUpdatesView(updaterViewModel: updaterViewModel)
-            }
         }
         
         MenuBarExtra(isInserted: $showMenuBarIcon) {
@@ -236,8 +225,7 @@ struct LowKeetApp: App {
                 .environmentObject(whisperState)
                 .environmentObject(hotkeyManager)
                 .environmentObject(menuBarManager)
-                .environmentObject(updaterViewModel)
-                // OFFLINE MODE: Removed aiService and enhancementService
+                // OFFLINE MODE: Removed aiService, enhancementService, and updater
         } label: {
             let image: NSImage = {
                 let ratio = $0.size.height / $0.size.width
@@ -257,48 +245,6 @@ struct LowKeetApp: App {
             }
         }
         #endif
-    }
-}
-
-class UpdaterViewModel: ObservableObject {
-    @AppStorage("autoUpdateCheck") private var autoUpdateCheck = true
-    
-    private let updaterController: SPUStandardUpdaterController
-    
-    @Published var canCheckForUpdates = false
-    
-    init() {
-        updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
-        
-        // Enable automatic update checking
-        updaterController.updater.automaticallyChecksForUpdates = autoUpdateCheck
-        updaterController.updater.updateCheckInterval = 24 * 60 * 60
-        
-        updaterController.updater.publisher(for: \.canCheckForUpdates)
-            .assign(to: &$canCheckForUpdates)
-    }
-    
-    func toggleAutoUpdates(_ value: Bool) {
-        updaterController.updater.automaticallyChecksForUpdates = value
-    }
-    
-    func checkForUpdates() {
-        // This is for manual checks - will show UI
-        updaterController.checkForUpdates(nil)
-    }
-    
-    func silentlyCheckForUpdates() {
-        // This checks for updates in the background without showing UI unless an update is found
-        updaterController.updater.checkForUpdatesInBackground()
-    }
-}
-
-struct CheckForUpdatesView: View {
-    @ObservedObject var updaterViewModel: UpdaterViewModel
-    
-    var body: some View {
-        Button("Check for Updates…", action: updaterViewModel.checkForUpdates)
-            .disabled(!updaterViewModel.canCheckForUpdates)
     }
 }
 

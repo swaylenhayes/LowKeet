@@ -12,7 +12,6 @@ private let isOfflineMode = false
 #endif
 
 struct SettingsView: View {
-    @EnvironmentObject private var updaterViewModel: UpdaterViewModel
     @EnvironmentObject private var menuBarManager: MenuBarManager
     @EnvironmentObject private var hotkeyManager: HotkeyManager
     @EnvironmentObject private var whisperState: WhisperState
@@ -32,11 +31,6 @@ struct SettingsView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {
-                // OFFLINE MODE: Show banner
-                if isOfflineMode {
-                    OfflineModeBanner()
-                }
-
                 SettingsSection(
                     icon: "command.circle",
                     title: "Voice Memo Shortcuts",
@@ -561,35 +555,5 @@ extension Text {
             .font(.system(size: 13))
             .foregroundColor(.secondary)
             .fixedSize(horizontal: false, vertical: true)
-    }
-}
-
-// MARK: - Offline Mode Banner (reused from EnhancementSettingsView)
-private struct OfflineModeBanner: View {
-    var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: "checkmark.shield.fill")
-                .font(.title3)
-                .foregroundColor(.green)
-
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Offline Mode - No Internet Required")
-                    .font(.headline)
-                    .foregroundColor(.primary)
-
-                Text("This build operates entirely offline with pre-bundled local models. All transcription happens on your device without any cloud connectivity.")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
-
-            Spacer()
-        }
-        .padding()
-        .background(Color.green.opacity(0.1))
-        .cornerRadius(12)
-        .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(Color.green.opacity(0.3), lineWidth: 1)
-        )
     }
 }

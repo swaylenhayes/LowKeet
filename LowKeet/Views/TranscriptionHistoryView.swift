@@ -8,7 +8,6 @@ struct TranscriptionHistoryView: View {
     @State private var selectedTranscriptions: Set<Transcription> = []
     @State private var showDeleteConfirmation = false
     @State private var isViewCurrentlyVisible = false
-    @State private var showAnalysisView = false
     
     private let exportService = LowKeetCSVExportService()
     
@@ -147,11 +146,6 @@ struct TranscriptionHistoryView: View {
         } message: {
             Text("This action cannot be undone. Are you sure you want to delete \(selectedTranscriptions.count) item\(selectedTranscriptions.count == 1 ? "" : "s")?")
         }
-        .sheet(isPresented: $showAnalysisView) {
-            if !selectedTranscriptions.isEmpty {
-                PerformanceAnalysisView(transcriptions: Array(selectedTranscriptions))
-            }
-        }
         .onAppear {
             isViewCurrentlyVisible = true
             Task {
@@ -163,7 +157,7 @@ struct TranscriptionHistoryView: View {
         }
         .onChange(of: searchText) { _, _ in
             Task {
-                await resetPagination()
+                resetPagination()
                 await loadInitialContent()
             }
         }
@@ -177,13 +171,13 @@ struct TranscriptionHistoryView: View {
                 // or if the view is active and new content is relevant.
                 if lastTimestamp == nil {
                     Task {
-                        await resetPagination()
+                        resetPagination()
                         await loadInitialContent()
                     }
                 } else {
                     // Reset pagination to show the latest content
                     Task {
-                        await resetPagination()
+                        resetPagination()
                         await loadInitialContent()
                     }
                 }
@@ -228,17 +222,7 @@ struct TranscriptionHistoryView: View {
                 .font(.system(size: 14))
             
             Spacer()
-            
-            Button(action: {
-                showAnalysisView = true
-            }) {
-                HStack(spacing: 4) {
-                    Image(systemName: "chart.bar.xaxis")
-                    Text("Analyze")
-                }
-            }
-            .buttonStyle(.borderless)
-            
+
             Button(action: {
                 exportService.exportTranscriptionsToCSV(transcriptions: Array(selectedTranscriptions))
             }) {
@@ -350,7 +334,7 @@ struct TranscriptionHistoryView: View {
         
         // Refresh the view
         Task {
-            try? await modelContext.save()
+            try? modelContext.save()
             await loadInitialContent()
         }
     }
@@ -373,7 +357,7 @@ struct TranscriptionHistoryView: View {
         
         // Save changes and refresh
         Task {
-            try? await modelContext.save()
+            try? modelContext.save()
             await loadInitialContent()
         }
     }
