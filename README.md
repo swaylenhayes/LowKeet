@@ -34,7 +34,7 @@
 
 ### Quick Start
 
-> 💡 TIP: Go to [releases]([url](https://github.com/swaylenhayes/LowKeet/releases)) for the easiest install experience.
+> 💡 TIP: Go to [releases](https://github.com/swaylenhayes/LowKeet/releases) for the easiest install experience.
 
 1. **Clone the repository**
 
