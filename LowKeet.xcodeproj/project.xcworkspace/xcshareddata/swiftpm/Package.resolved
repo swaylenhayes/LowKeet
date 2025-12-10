@@ -1,5 +1,5 @@
 {
-  "originHash" : "144ae35ef0b62c92588dc767eb6b2d443797062688bf1347662bed55d75a7ec2",
+  "originHash" : "68c6bbd63615f04525ad9542bc830268c503585e0c9665a0fdc061c8f5b62404",
   "pins" : [
     {
       "identity" : "axswift",
@@ -61,15 +61,6 @@
       "location" : "https://github.com/tisfeng/SelectedTextKit",
       "state" : {
         "revision" : "f6c1574ad6f747e1110b544c35e6ec64ed6f52f1"
-      }
-    },
-    {
-      "identity" : "sparkle",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/sparkle-project/Sparkle",
-      "state" : {
-        "revision" : "9a1d2a19d3595fcf8d9c447173f9a1687b3dcadb",
-        "version" : "2.8.0"
       }
     },
     {

@@ -34,39 +34,37 @@
 
 ### Quick Start
 
-> 💡 TIP: Go to [releases](https://github.com/swaylenhayes/LowKeet/releases) for the easiest install experience.
+**For source releases:**
 
-1. **Clone the repository**
-
+1. **Download and extract** the latest source release from [GitHub Releases](https://github.com/swaylenhayes/lowkeet/releases)
    ```bash
-   git clone https://github.com/swaylenhayes/LowKeet.git
-   cd LowKeet
+   unzip v1.1-source.zip
+   cd LowKeet-v1.1-source
    ```
 
-2. **Run the automated dependency installer**
+2. **Install dependencies** (framework & models)
+   ```bash
+   # Download v1.1-framework-models.zip from releases
+   unzip v1.1-framework-models.zip
 
-```bash
-./scripts/install-dependencies.sh
-# This downloads models-v1.0 and whisper-framework-v1.0 automatically
-```
+   # Copy to project
+   cp -r whisper.xcframework ./
+   cp -r BundledModels ./LowKeet/Resources/
+   ```
 
 3. **Open in Xcode**
-
    ```bash
    open LowKeet.xcodeproj
    ```
 
 4. **Configure Code Signing**
-
    - Select the LowKeet project in the navigator
    - Go to "Signing & Capabilities" tab
-   - Select your development team from the dropdown
-   - Xcode will automatically manage provisioning
+   - Select your development team
 
 5. **Build and Run**
-
-   - Press `⌘+B` to build
-   - Press `⌘+R` to run
+   - Press `⌘+R` to build and run
+   - On first launch, models are automatically copied to Application Support
 
 ## Project Structure
 ```
@@ -86,6 +84,27 @@ LowKeet/
 └── LowKeet.xcodeproj/          # Xcode project
 ```
 
+## Framework & AI Models
+
+### Included Framework
+
+- **whisper.xcframework** (161MB) - High-performance inference via [whisper.cpp](https://github.com/ggerganov/whisper.cpp)
+
+### Included AI Models
+
+- **Whisper base.en** (141 MB) - English-only base model (GGML)
+- **Whisper large-v3-turbo** (547 MB) - 99 languages supported (GGML)
+- **Parakeet TDT v2** (443 MB) - NVIDIA English-only model (CoreML)
+- **Parakeet TDT v3** (461 MB) - NVIDIA English + 25 European languages (CoreML)
+
+### v1.1 Feature: Automatic Model Initialization
+
+On first launch, models are automatically copied from the app bundle to:
+- **Whisper models**: `~/Library/Application Support/com.swaylenhayes.apps.LowKeet/WhisperModels/`
+- **Parakeet models**: `~/Library/Application Support/FluidAudio/Models/`
+
+This ensures models work correctly even after app updates or reinstalls.
+
 ## License
 
 This project is licensed under the **GNU General Public License v3.0** - see the [LICENSE](LICENSE) file for details.
@@ -104,7 +123,7 @@ Under the conditions that:
 - ⚠️ You state changes made to the code
 - ⚠️ You include the original license and copyright
 
-## Acknowledgments
+## Acknowledgments & References
 
 ### Originally Based On
 

@@ -109,13 +109,9 @@ class WhisperState: NSObject, ObservableObject {
         self.modelsDirectory = appSupportDirectory.appendingPathComponent("WhisperModels")
         self.recordingsDirectory = appSupportDirectory.appendingPathComponent("Recordings")
 
-        // OFFLINE MODE: Check for bundled models in app bundle (directly in Resources)
-        if let bundlePath = Bundle.main.resourcePath {
-            let bundleModels = URL(fileURLWithPath: bundlePath)
-            self.bundledModelsDirectory = bundleModels
-        } else {
-            self.bundledModelsDirectory = nil
-        }
+        // Models are initialized from bundle to Application Support on first launch
+        // See ModelInitializationService
+        self.bundledModelsDirectory = nil
 
         super.init()
 

@@ -88,11 +88,21 @@ struct LowKeetApp: App {
         _menuBarManager = StateObject(wrappedValue: menuBarManager)
         appDelegate.menuBarManager = menuBarManager
         
+        // Initialize bundled models on first launch
+        Task {
+            let modelInitService = ModelInitializationService()
+            do {
+                try await modelInitService.initializeModelsIfNeeded()
+            } catch {
+                logger.error("Model initialization failed: \(error.localizedDescription)")
+            }
+        }
+
         // Ensure no lingering recording state from previous runs
         Task {
             await whisperState.resetOnLaunch()
         }
-        
+
         AppShortcuts.updateAppShortcutParameters()
     }
     
