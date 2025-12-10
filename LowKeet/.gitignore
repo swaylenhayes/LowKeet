@@ -1,0 +1,130 @@
+# Xcode
+#
+# gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
+
+## User settings
+xcuserdata/
+
+## Compatibility with Xcode 8 and earlier (ignoring not required starting Xcode 9)
+*.xcscmblueprint
+*.xccheckout
+
+## Compatibility with Xcode 3 and earlier (ignoring not required starting Xcode 4)
+build/
+DerivedData/
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+
+## Obj-C/Swift specific
+*.hmap
+
+## App packaging
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+## Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# Swift Package Manager
+#
+.build/
+.swiftpm/
+Package.resolved
+
+# CocoaPods (if you end up using it)
+#
+Pods/
+*.xcworkspace
+!default.xcworkspace
+
+# Carthage (if you use it)
+#
+Carthage/Build/
+
+# Accio dependency management
+Dependencies/
+.accio/
+
+# fastlane
+#
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+# Code Injection
+#
+iOSInjectionProject/
+
+## Whisper-specific ignores
+#
+# Whisper model files (these are LARGE - don't commit them)
+*.bin
+*.ggml
+*.mlmodel
+*.mlmodelc
+*.mlpackage
+
+# Whisper dependencies folder
+LowKeet-Dependencies/
+whisper.cpp/
+
+# Pre-built frameworks (optional - decide if you want to commit these)
+# *.xcframework
+
+# Whisper models directory (wherever you store them)
+Models/
+models/
+Resources/Models/
+whisper-models/
+
+## macOS
+#
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+dist/
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+## IDEs
+#
+# VSCode
+.vscode/
+
+# Claude Code
+.claude/
+
+# Cursor
+.cursor/
+
+## Other
+#
+*.swp
+*~.nib
+*.log
