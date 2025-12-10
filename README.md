@@ -62,10 +62,10 @@
 
 LowKeet comes with 4 pre-bundled AI models (no additional downloads required):
 
-1. **ggml-base.en** - Fast, English-only Whisper model
-2. **ggml-large-v3-turbo** - High-quality, fast Whisper model
-3. **Parakeet TDT v2** - NVIDIA's streaming speech recognition model
-4. **Parakeet TDT v3** - Latest version with improved accuracy
+1. **ggml-base.en** - Whisper base model (English only) (GGML)
+2. **ggml-large-v3-turbo** - Whisper large-v3 model (Multilingual 99 languages) (GGML)
+3. **Parakeet TDT v2** - NVIDIA's TDT v2 model (English only) (CoreML)
+4. **Parakeet TDT v3** - NVIDIA's TDT v3 model (Multilingual 26 languages) (CoreML)
 
 All models are located in the `BundledModels/` directory and total ~1.6 GB.
 
