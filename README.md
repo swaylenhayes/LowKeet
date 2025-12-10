@@ -34,12 +34,12 @@
 
 ### Quick Start
 
-> 💡 TIP: Go to releases for the easiest install experience.
+> 💡 TIP: Go to [releases]([url](https://github.com/swaylenhayes/LowKeet/releases)) for the easiest install experience.
 
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/[YOUR_USERNAME]/LowKeet.git
+   git clone https://github.com/swaylenhayes/LowKeet.git
    cd LowKeet
    ```
 
