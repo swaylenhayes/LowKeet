@@ -5,6 +5,7 @@ struct MenuBarView: View {
     @EnvironmentObject var whisperState: WhisperState
     @EnvironmentObject var hotkeyManager: HotkeyManager
     @EnvironmentObject var menuBarManager: MenuBarManager
+    @EnvironmentObject var updaterViewModel: UpdaterViewModel
     // OFFLINE MODE: Removed enhancementService and aiService
     @ObservedObject var audioDeviceManager = AudioDeviceManager.shared
     @State private var launchAtLoginEnabled = LaunchAtLogin.isEnabled
@@ -17,7 +18,7 @@ struct MenuBarView: View {
                 ForEach(whisperState.usableModels, id: \.id) { model in
                     Button {
                         Task {
-                            whisperState.setDefaultTranscriptionModel(model)
+                            await whisperState.setDefaultTranscriptionModel(model)
                         }
                     } label: {
                         HStack {
@@ -106,7 +107,15 @@ struct MenuBarView: View {
                 .onChange(of: launchAtLoginEnabled) { oldValue, newValue in
                     LaunchAtLogin.isEnabled = newValue
                 }
-
+            
+            Divider()
+            
+            Button("Check for Updates") {
+                updaterViewModel.checkForUpdates()
+            }
+            .disabled(!updaterViewModel.canCheckForUpdates)
+            
+            
             Divider()
             
             Button("Quit LowKeet") {

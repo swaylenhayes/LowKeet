@@ -9,8 +9,9 @@ private let isOfflineMode = true
 private let isOfflineMode = false
 #endif
 
-// ViewType enum (OFFLINE MODE: Removed enhancement, powerMode, license, metrics)
+// ViewType enum (OFFLINE MODE: Removed enhancement, powerMode, license)
 enum ViewType: String, CaseIterable, Identifiable {
+    case metrics = "Dashboard"
     case transcribeAudio = "Transcribe Audio"
     case history = "History"
     case models = "AI Models"
@@ -23,6 +24,7 @@ enum ViewType: String, CaseIterable, Identifiable {
 
     var icon: String {
         switch self {
+        case .metrics: return "gauge.medium"
         case .transcribeAudio: return "waveform.circle.fill"
         case .history: return "doc.text.fill"
         case .models: return "brain.head.profile"
@@ -58,12 +60,25 @@ struct ContentView: View {
     @EnvironmentObject private var whisperState: WhisperState
     @EnvironmentObject private var hotkeyManager: HotkeyManager
     @AppStorage("powerModeUIFlag") private var powerModeUIFlag = false
-    // OFFLINE MODE: Default to transcribeAudio
-    @State private var selectedView: ViewType? = .transcribeAudio
+    // OFFLINE MODE: Default to transcribeAudio instead of metrics
+    @State private var selectedView: ViewType? = isOfflineMode ? .transcribeAudio : .metrics
     let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
 
     private var visibleViewTypes: [ViewType] {
-        ViewType.allCases
+        ViewType.allCases.filter { viewType in
+            // OFFLINE MODE: Hide dashboard feature
+            if isOfflineMode {
+                switch viewType {
+                case .metrics:
+                    return false
+                default:
+                    return true
+                }
+            }
+
+            // OFFLINE MODE: No additional filtering needed
+            return true
+        }
     }
 
     var body: some View {
@@ -71,25 +86,33 @@ struct ContentView: View {
             List(selection: $selectedView) {
                 Section {
                     // App Header
-                    HStack(spacing: 9) {
+                    HStack(spacing: 6) {
                         if let appIcon = NSImage(named: "AppIcon") {
                             Image(nsImage: appIcon)
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 28, height: 28)
                                 .cornerRadius(8)
-                                .padding(.leading, -3)
                         }
 
-                        Text("LowKeet")
+                        Text("Voice Memo")
                             .font(.system(size: 14, weight: .semibold))
+
+                        // OFFLINE MODE: Always show offline badge
+                        if isOfflineMode {
+                            Text("OFFLINE")
+                                .font(.system(size: 9, weight: .heavy))
+                                .foregroundStyle(.white)
+                                .padding(.horizontal, 4)
+                                .padding(.vertical, 2)
+                                .background(Color.green)
+                                .cornerRadius(4)
+                        }
 
                         Spacer()
                     }
                     .padding(.vertical, 4)
-                    .padding(.horizontal, 2)
                 }
-                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
 
                 ForEach(visibleViewTypes) { viewType in
                     Section {
@@ -105,7 +128,7 @@ struct ContentView: View {
                                 Spacer()
                             }
                             .padding(.vertical, 8)
-                            .padding(.horizontal, 1)
+                            .padding(.horizontal, 2)
                         }
                         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                         .listRowSeparator(.hidden)
@@ -113,7 +136,7 @@ struct ContentView: View {
                 }
             }
             .listStyle(.sidebar)
-            .navigationTitle("LowKeet")
+            .navigationTitle("Voice Memo")
             .navigationSplitViewColumnWidth(210)
         } detail: {
             if let selectedView = selectedView {
@@ -150,8 +173,10 @@ struct ContentView: View {
     
     @ViewBuilder
     private func detailView(for viewType: ViewType) -> some View {
-        // OFFLINE MODE: Removed enhancement, powerMode, license, metrics cases
+        // OFFLINE MODE: Removed enhancement, powerMode, license cases
         switch viewType {
+        case .metrics:
+            MetricsView()
         case .models:
             ModelManagementView(whisperState: whisperState)
         case .transcribeAudio:

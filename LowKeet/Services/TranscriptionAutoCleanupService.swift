@@ -82,7 +82,6 @@ class TranscriptionAutoCleanupService {
         }
     }
 
-    @MainActor
     private func sweepOldTranscriptions(modelContext: ModelContext) async {
         guard UserDefaults.standard.bool(forKey: keyIsEnabled) else {
             return
@@ -94,24 +93,26 @@ class TranscriptionAutoCleanupService {
         let cutoffDate = Date().addingTimeInterval(TimeInterval(-effectiveMinutes * 60))
 
         do {
-            let descriptor = FetchDescriptor<Transcription>(
-                predicate: #Predicate<Transcription> { transcription in
-                    transcription.timestamp < cutoffDate
+            try await MainActor.run {
+                let descriptor = FetchDescriptor<Transcription>(
+                    predicate: #Predicate<Transcription> { transcription in
+                        transcription.timestamp < cutoffDate
+                    }
+                )
+                let items = try modelContext.fetch(descriptor)
+                var deletedCount = 0
+                for transcription in items {
+                    // Remove audio file if present
+                    if let urlString = transcription.audioFileURL,
+                       let url = URL(string: urlString),
+                       FileManager.default.fileExists(atPath: url.path) {
+                        try? FileManager.default.removeItem(at: url)
+                    }
+                    modelContext.delete(transcription)
+                    deletedCount += 1
                 }
-            )
-            let items = try modelContext.fetch(descriptor)
-            var deletedCount = 0
-            for transcription in items {
-                // Remove audio file if present
-                if let urlString = transcription.audioFileURL,
-                   let url = URL(string: urlString),
-                   FileManager.default.fileExists(atPath: url.path) {
-                    try? FileManager.default.removeItem(at: url)
-                }
-                modelContext.delete(transcription)
-                deletedCount += 1
+                if deletedCount > 0 { try modelContext.save() }
             }
-            if deletedCount > 0 { try modelContext.save() }
         } catch {
             logger.error("Failed during transcription cleanup: \(error.localizedDescription)")
         }

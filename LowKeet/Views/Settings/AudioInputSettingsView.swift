@@ -6,15 +6,18 @@ struct AudioInputSettingsView: View {
     
     var body: some View {
         ScrollView {
-            mainContent
+            VStack(spacing: 0) {
+                heroSection
+                mainContent
+            }
         }
         .background(Color(NSColor.controlBackgroundColor))
     }
-
+    
     private var mainContent: some View {
         VStack(spacing: 40) {
             inputModeSection
-
+            
             if audioDeviceManager.inputMode == .custom {
                 customDeviceSection
             } else if audioDeviceManager.inputMode == .prioritized {
@@ -24,7 +27,29 @@ struct AudioInputSettingsView: View {
         .padding(.horizontal, 32)
         .padding(.vertical, 40)
     }
-
+    
+    private var heroSection: some View {
+        VStack(spacing: 24) {
+            Image(systemName: "waveform")
+                .font(.system(size: 40))
+                .foregroundStyle(.blue)
+                .padding(20)
+                .background(Circle()
+                    .fill(Color(.windowBackgroundColor).opacity(0.4))
+                    .shadow(color: .black.opacity(0.1), radius: 10, y: 5))
+            
+            VStack(spacing: 8) {
+                Text("Audio Input")
+                    .font(.system(size: 28, weight: .bold))
+                Text("Configure your microphone preferences")
+                    .font(.system(size: 15))
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .padding(.vertical, 40)
+        .frame(maxWidth: .infinity)
+    }
+    
     private var inputModeSection: some View {
         VStack(alignment: .leading, spacing: 20) {
             Text("Input Mode")
